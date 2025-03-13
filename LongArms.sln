@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35825.156
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LongArms", "LongArms.csproj", "{48F174EE-600E-131C-3950-D0E6E0925666}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{48F174EE-600E-131C-3950-D0E6E0925666}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48F174EE-600E-131C-3950-D0E6E0925666}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48F174EE-600E-131C-3950-D0E6E0925666}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48F174EE-600E-131C-3950-D0E6E0925666}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1F620AC4-FD49-40DD-99BB-0570FC9D2A30}
+	EndGlobalSection
+EndGlobal
