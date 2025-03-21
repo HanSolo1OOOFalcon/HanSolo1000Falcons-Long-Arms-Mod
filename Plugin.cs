@@ -51,17 +51,17 @@ namespace LongArms
         {
             if (NetworkSystem.Instance.GameModeString.Contains("MODDED"))
             {
-                if (GorillaLocomotion.Player.Instance != null)
+                if (GorillaLocomotion.GTPlayer.Instance != null)
                 {
-                    GorillaLocomotion.Player.Instance.transform.localScale = new Vector3(playerScale, playerScale, playerScale);
+                    GorillaLocomotion.GTPlayer.Instance.transform.localScale = new Vector3(playerScale, playerScale, playerScale);
                 }
             }
         }
         private void OnLeftRoom()
         {
-            if (GorillaLocomotion.Player.Instance != null)
+            if (GorillaLocomotion.GTPlayer.Instance != null)
             {
-                GorillaLocomotion.Player.Instance.transform.localScale = new Vector3(1f, 1f, 1f);
+                GorillaLocomotion.GTPlayer.Instance.transform.localScale = new Vector3(1f, 1f, 1f);
             }
         }
 
@@ -130,9 +130,9 @@ namespace LongArms
 			playerScale = 1f;
 		}
 				
-		if (GorillaLocomotion.Player.Instance != null)
+		if (GorillaLocomotion.GTPlayer.Instance != null)
 		{
-                    	GorillaLocomotion.Player.Instance.transform.localScale = new Vector3(playerScale, playerScale, playerScale);
+                    	GorillaLocomotion.GTPlayer.Instance.transform.localScale = new Vector3(playerScale, playerScale, playerScale);
                 }
 
 		lastTime += Time.deltaTime;
