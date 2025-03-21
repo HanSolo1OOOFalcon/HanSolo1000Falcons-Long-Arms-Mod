@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using BepInEx;
 using UnityEngine;
 using Utilla;
@@ -10,9 +10,9 @@ namespace LongArms
 	/// </summary>
 
 	/* This attribute tells Utilla to look for [ModdedGameJoin] and [ModdedGameLeave] */
-	[BepInDependency("org.legoandmars.gorillatag.utilla", "1.5.0")]
-	[BepInPlugin(PluginInfo.GUID, PluginInfo.Name, PluginInfo.Version)]
-	public class Plugin : BaseUnityPlugin
+    [BepInDependency("org.legoandmars.gorillatag.utilla", "1.5.0")]
+    [BepInPlugin(PluginInfo.GUID, PluginInfo.Name, PluginInfo.Version)]
+    public class Plugin : BaseUnityPlugin
     {
 		void OnEnable()
 		{
@@ -65,77 +65,78 @@ namespace LongArms
             }
         }
 
-		public static float playerScale = 1f;
-		private static bool yPress = false;
+	public static float playerScale = 1f;
+	private static bool yPress = false;
         private static float lastTime = 0f;
-        private static bool toggled = true;
+       	private static bool toggled = true;
+	public static bool osToggled = true;
         void FixedUpdate()
+        {
+	bool lT = ControllerInputPoller.instance.leftControllerIndexFloat > 0.5f;
+	bool lG = ControllerInputPoller.instance.leftGrab;
+	bool Y = ControllerInputPoller.instance.leftControllerSecondaryButton;
+	bool X = ControllerInputPoller.instance.leftControllerPrimaryButton;
+
+	if (NetworkSystem.Instance.GameModeString.Contains("MODDED"))
+	{
+		float increment = 0.05f;
+		float cooldown = 0.05f;
+		float max = 3f;
+		float least = 0.5f;
+
+		if (lT && toggled && !lG && osToggled)
 		{
-			bool lT = ControllerInputPoller.instance.leftControllerIndexFloat > 0.5f;
-			bool lG = ControllerInputPoller.instance.leftGrab;
-			bool Y = ControllerInputPoller.instance.leftControllerSecondaryButton;
-			bool X = ControllerInputPoller.instance.leftControllerPrimaryButton;
-
-			if (NetworkSystem.Instance.GameModeString.Contains("MODDED"))
+			if (lastTime >= cooldown)
 			{
-				float increment = 0.05f;
-				float cooldown = 0.05f;
-				float max = 3f;
-				float least = 0.5f;
-
-				if (lT && toggled && !lG)
-				{
-					if (lastTime >= cooldown)
-					{
-						lastTime = 0f;
-						playerScale += increment;
-					}
-				}
-
-                if (lG && toggled && !lT)
-                {
-                    if (lastTime >= cooldown)
-                    {
-                        lastTime = 0f;
-                        playerScale -= increment;
-                    }
-                }
-
-				if (Y)
-				{
-					if (!yPress)
-					{
-						yPress = true;
-						toggled = !toggled;
-					}
-				}
-				else
-				{
-					yPress = false;
-				}
-
-				if (playerScale > max)
-				{
-					playerScale = max;
-				}
-
-				if (playerScale < least)
-				{
-					playerScale = least;
-				}
-
-				if (X)
-				{
-					playerScale = 1f;
-				}
-				
-				if (GorillaLocomotion.Player.Instance != null)
-				{
-                    GorillaLocomotion.Player.Instance.transform.localScale = new Vector3(playerScale, playerScale, playerScale);
-                }
-
-				lastTime += Time.deltaTime;
-            }
+				lastTime = 0f;
+				playerScale += increment;
+			}
 		}
+
+                if (lG && toggled && !lT && osToggled)
+                {
+                    	if (lastTime >= cooldown)
+                    	{
+                        	lastTime = 0f;
+                        	playerScale -= increment;
+                    	}
+                }
+
+		if (Y && osToggled)
+		{
+			if (!yPress)
+			{
+				yPress = true;
+				toggled = !toggled;
+			}
+		}
+		else
+		{
+			yPress = false;
+		}
+
+		if (playerScale > max)
+		{
+			playerScale = max;
+		}
+
+		if (playerScale < least)
+		{
+			playerScale = least;
+		}
+
+		if (X && toggled && osToggled)
+		{
+			playerScale = 1f;
+		}
+				
+		if (GorillaLocomotion.Player.Instance != null)
+		{
+                    	GorillaLocomotion.Player.Instance.transform.localScale = new Vector3(playerScale, playerScale, playerScale);
+                }
+
+		lastTime += Time.deltaTime;
+            }
+	}
     }
 }
