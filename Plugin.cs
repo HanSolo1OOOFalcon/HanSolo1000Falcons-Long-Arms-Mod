@@ -70,7 +70,14 @@ namespace LongArms
         private static float lastTime = 0f;
        	private static bool toggled = true;
 	public static bool osToggled = true;
-        void FixedUpdate()
+
+	public static float increment = 0.05f;
+	public static float cooldown = 0.05f;
+	public static float max = 3f;
+	public static float least = 0.5f;
+
+	
+ 	void FixedUpdate()
         {
 	bool lT = ControllerInputPoller.instance.leftControllerIndexFloat > 0.5f;
 	bool lG = ControllerInputPoller.instance.leftGrab;
@@ -79,11 +86,6 @@ namespace LongArms
 
 	if (NetworkSystem.Instance.GameModeString.Contains("MODDED"))
 	{
-		float increment = 0.05f;
-		float cooldown = 0.05f;
-		float max = 3f;
-		float least = 0.5f;
-
 		if (lT && toggled && !lG && osToggled)
 		{
 			if (lastTime >= cooldown)
