@@ -1,13 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using BananaOS;
-using BepInEx;
-using HarmonyLib;
-using UnityEngine;
-using static BananaOS.Plugin;
-using static LongArms.Plugin;
-
+using static HanSolo1000FalconsLongArmsMod.Plugin;
 namespace BananaOS.Pages
 {
     public class BananaOsSupport : WatchPage
@@ -57,12 +51,12 @@ namespace BananaOS.Pages
                     }
                     if (selectionHandler.currentIndex == 2)
                     {
-                        playerScale += 0.1f;
+                        playerScale += increment;
                         return;
                     }
                     if (selectionHandler.currentIndex == 3)
                     {
-                        playerScale -= 0.1f;
+                        playerScale -= increment;
                         return;
                     }
                     break;
