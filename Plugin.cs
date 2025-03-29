@@ -1,6 +1,7 @@
 using System;
 using BepInEx;
 using UnityEngine;
+using UnityEngine.XR;
 using Utilla;
 
 namespace HanSolo1000FalconsLongArmsMod
@@ -12,9 +13,9 @@ namespace HanSolo1000FalconsLongArmsMod
 	/* This attribute tells Utilla to look for [ModdedGameJoin] and [ModdedGameLeave] */
 	[BepInDependency("org.legoandmars.gorillatag.utilla", "1.5.0")]
 	[BepInPlugin(PluginInfo.GUID, PluginInfo.Name, PluginInfo.Version)]
-    public class Plugin : BaseUnityPlugin
+	public class Plugin : BaseUnityPlugin
     {
-	public static bool ciEnabled = true;
+		public static bool ciEnabled = true;
 		
 		void OnEnable()
 		{
@@ -27,7 +28,7 @@ namespace HanSolo1000FalconsLongArmsMod
 		{
 			ciEnabled = false;
 
-            		HarmonyPatches.RemoveHarmonyPatches();
+            HarmonyPatches.RemoveHarmonyPatches();
 		}
 
 		void OnGameInitialized(object sender, EventArgs e)
@@ -56,10 +57,36 @@ namespace HanSolo1000FalconsLongArmsMod
                     {
                         GorillaLocomotion.GTPlayer.Instance.transform.localScale = new Vector3(playerScale, playerScale, playerScale);
                     }
+
+                    if (lBall == null)
+                    {
+                        lBall = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                        lBall.transform.localScale = new Vector3(ballScale, ballScale, ballScale);
+                        lBall.GetComponent<Renderer>().material.shader = Shader.Find("GorillaTag/UberShader");
+                        lBall.GetComponent<Renderer>().material.color = Color.yellow;
+                        lBall.GetComponent<Collider>().enabled = false;
+                        lBall.transform.SetParent(GorillaTagger.Instance.leftHandTransform);
+                        lBall.transform.localPosition = Vector3.zero;
+                        lBall.transform.rotation = Quaternion.identity;
+                        lBall.SetActive(false);
+                    }
+
+                    if (rBall == null)
+                    {
+                        rBall = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                        rBall.transform.localScale = new Vector3(ballScale, ballScale, ballScale);
+                        rBall.GetComponent<Renderer>().material.shader = Shader.Find("GorillaTag/UberShader");
+                        rBall.GetComponent<Renderer>().material.color = Color.magenta;
+                        rBall.GetComponent<Collider>().enabled = false;
+                        rBall.transform.SetParent(GorillaTagger.Instance.rightHandTransform);
+                        rBall.transform.localPosition = Vector3.zero;
+                        rBall.transform.rotation = Quaternion.identity;
+                        rBall.SetActive(false);
+                    }
                 }
-		else
-		{
-			GorillaLocomotion.GTPlayer.Instance.transform.localScale = new Vector3(1f, 1f, 1f);
+				else
+				{
+					GorillaLocomotion.GTPlayer.Instance.transform.localScale = new Vector3(1f, 1f, 1f);
                 }
             }
         }
@@ -69,27 +96,42 @@ namespace HanSolo1000FalconsLongArmsMod
             {
                 GorillaLocomotion.GTPlayer.Instance.transform.localScale = new Vector3(1f, 1f, 1f);
             }
+
+            if (lBall != null)
+            {
+                Destroy(lBall);
+            }
+
+            if (rBall != null)
+            {
+                Destroy(rBall);
+            }
         }
 
-public static float playerScale = 1f;
-private static bool yPress = false;
-private static float lastTime = 0f;
-private static bool toggled = true;
-public static bool osToggled = true;
+		public static float playerScale = 1f;
+		private static bool yPress = false;
+        private static float lastTime = 0f;
+        private static bool toggled = true;
+		public static bool osToggled = true;
+        public static bool BALLS = false;
 
-public static float increment = 0.025f;
-public static float cooldown = 0.05f;
-public static float max = 3f;
-public static float least = 0.5f;
-void FixedUpdate()
-{
-	bool lT = ControllerInputPoller.instance.leftControllerIndexFloat > 0.5f;
-	bool lG = ControllerInputPoller.instance.leftGrab;
-	bool Y = ControllerInputPoller.instance.leftControllerSecondaryButton;
-	bool X = ControllerInputPoller.instance.leftControllerPrimaryButton;
+        private static GameObject lBall = null;
+        private static GameObject rBall = null;
 
-	if (NetworkSystem.Instance.InRoom)
-	{
+        public static float increment = 0.025f;
+        public static float cooldown = 0.05f;
+        public static float max = 25f;
+        public static float least = 0.2f;
+        public static float ballScale = 0.3f;
+        void FixedUpdate()
+		{
+			bool lT = ControllerInputPoller.instance.leftControllerIndexFloat > 0.5f;
+			bool lG = ControllerInputPoller.instance.leftGrab;
+			bool Y = ControllerInputPoller.instance.leftControllerSecondaryButton;
+			bool X = ControllerInputPoller.instance.leftControllerPrimaryButton;
+
+			if (NetworkSystem.Instance.InRoom)
+			{
                 if (NetworkSystem.Instance.GameModeString.Contains("MODDED"))
                 {
                     if (lT && toggled && !lG && osToggled)
@@ -107,6 +149,26 @@ void FixedUpdate()
                         {
                             lastTime = 0f;
                             playerScale -= increment;
+                        }
+                    }
+
+                    if (BALLS)
+                    {
+                        if (!lBall.activeSelf || !rBall.activeSelf)
+                        {
+                            lBall.SetActive(true);
+                            rBall.SetActive(true);
+                        }
+
+                        lBall.transform.localScale = new Vector3(ballScale, ballScale, ballScale);
+                        rBall.transform.localScale = new Vector3(ballScale, ballScale, ballScale);
+                    }
+                    else
+                    {
+                        if (lBall.activeSelf || rBall.activeSelf)
+                        {
+                            lBall.SetActive(false);
+                            rBall.SetActive(false);
                         }
                     }
 
